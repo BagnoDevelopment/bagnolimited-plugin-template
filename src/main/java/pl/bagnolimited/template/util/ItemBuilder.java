@@ -6,7 +6,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public final class ItemBuilder {
 
@@ -22,6 +24,7 @@ public final class ItemBuilder {
             this.itemMeta = new ItemStack(material).getItemMeta();
             this.amount = 1;
             this.durability = material.getMaxDurability();
+            return;
         }
         throw new IllegalArgumentException("Material can't be air!");
     }
