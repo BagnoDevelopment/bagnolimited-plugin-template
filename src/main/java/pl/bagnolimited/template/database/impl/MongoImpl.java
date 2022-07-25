@@ -8,14 +8,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import pl.bagnolimited.template.TemplatePlugin;
 import pl.bagnolimited.template.database.Database;
 
-@RequiredArgsConstructor
 public final class MongoImpl implements Database {
-
-    private final TemplatePlugin plugin;
 
     private MongoClient mongoClient;
     @Getter
