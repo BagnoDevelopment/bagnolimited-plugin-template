@@ -1,0 +1,1 @@
+# bagnolimited-plugin-template
