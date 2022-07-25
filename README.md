@@ -1,2 +1,2 @@
-# bagnolimited-plugin-template
-todo: dodać readme
+# 🖼️ | Plugin Template
+Gotowy szablon pluginu na platformę Spigot.
