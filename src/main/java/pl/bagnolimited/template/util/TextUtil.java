@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public final class TextUtil {
@@ -15,9 +16,7 @@ public final class TextUtil {
     }
 
     public static List<String> colorStringList(List<String> list) {
-        final List<String> toReturn = new ArrayList<>();
-        list.forEach(text -> toReturn.add(colorString(text)));
-        return toReturn;
+        return list.stream().map(TextUtil::colorString).collect(Collectors.toList());
     }
 
     public static String capitalizeFirstLetter(String text) {
