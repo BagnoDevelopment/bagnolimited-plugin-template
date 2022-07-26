@@ -3,7 +3,6 @@ package pl.bagnolimited.template.util;
 import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;

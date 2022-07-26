@@ -25,7 +25,7 @@ public final class TemplatePlugin extends JavaPlugin {
     @Getter
     private EventSystem eventSystem;
 
-    /**
+    /*
      * Plugin startup logic.
      * Connect to database, load user data etc.
      * Remember to load configuration files before connecting to database!
@@ -41,14 +41,14 @@ public final class TemplatePlugin extends JavaPlugin {
         getLogger().info("Plugin enabled in " + milliseconds + "ms.");
     }
 
-    /**
+    /*
      * Plugin shutdown logic.
      * Save user data, disconnect from database etc.
      */
     @Override
     public void onDisable() {}
 
-    /**
+    /*
      * Here you can register all configuration files.
      * Just use an example.
      */
