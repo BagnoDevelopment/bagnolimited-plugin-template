@@ -8,15 +8,16 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.bagnolimited.template.base.EventSystem;
 
 import java.io.File;
 import java.io.IOException;
 
-public final class TemplatePlugin extends JavaPlugin {
+import static pl.bagnolimited.template.util.TextUtil.*;
 
-    private long ENABLE_TIME;
+public final class TemplatePlugin extends JavaPlugin {
 
     @Getter
     private YamlDocument mainConfiguration,
@@ -32,10 +33,13 @@ public final class TemplatePlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        this.ENABLE_TIME = System.currentTimeMillis();
+        long ENABLE_TIME = System.currentTimeMillis();
 
         registerConfigurationFiles();
         this.eventSystem = new EventSystem(this);
+
+        this.eventSystem.register(PlayerJoinEvent.class, event ->
+                event.getPlayer().sendMessage(colorString(messagesConfiguration.getString("example"))));
 
         final long milliseconds = Math.abs(ENABLE_TIME - System.currentTimeMillis());
         getLogger().info("Plugin enabled in " + milliseconds + "ms.");

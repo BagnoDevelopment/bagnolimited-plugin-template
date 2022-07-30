@@ -1,2 +1,2 @@
-server:
-  player-join: "&aHello!"
+# Example message
+example: "&aThis is an example!"

@@ -1,8 +1,2 @@
+# Don't touch
 version: 1.0.0
-
-mongodb:
-  connection-string: "mongodb://username:pasword@host:port"
-  database: "template"
-  collections:
-    profile-collection: "example-collection"
-  should-disable-server-if-failed-to-connect: true
