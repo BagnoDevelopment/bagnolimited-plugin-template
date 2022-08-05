@@ -1,27 +1,21 @@
 package pl.bagnolimited.template;
 
-import dev.dejvokep.boostedyaml.YamlDocument;
-import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
-import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
-import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
-import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
-import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
+import eu.okaeri.configs.ConfigManager;
+import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.bagnolimited.template.base.EventSystem;
+import pl.bagnolimited.template.config.MessageConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 
 import static pl.bagnolimited.template.util.TextUtil.*;
 
 public final class TemplatePlugin extends JavaPlugin {
 
     @Getter
-    private YamlDocument mainConfiguration,
-            messagesConfiguration;
+    private MessageConfiguration messageConfiguration;
 
     @Getter
     private EventSystem eventSystem;
@@ -34,12 +28,11 @@ public final class TemplatePlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         long ENABLE_TIME = System.currentTimeMillis();
-
-        registerConfigurationFiles();
+        this.prepareConfiguration();
         this.eventSystem = new EventSystem(this);
 
         this.eventSystem.register(PlayerJoinEvent.class, event ->
-                event.getPlayer().sendMessage(colorString(messagesConfiguration.getString("example"))));
+                event.getPlayer().sendMessage(colorString(messageConfiguration.example)));
 
         final long milliseconds = Math.abs(ENABLE_TIME - System.currentTimeMillis());
         getLogger().info("Plugin enabled in " + milliseconds + "ms.");
@@ -52,18 +45,13 @@ public final class TemplatePlugin extends JavaPlugin {
     @Override
     public void onDisable() {}
 
-    /*
-     * Here you can register all configuration files.
-     * Just use an example.
-     */
-    @SneakyThrows(IOException.class)
-    private void registerConfigurationFiles() {
-        this.mainConfiguration = YamlDocument.create(new File(getDataFolder(), "config.yml"), getResource("config.yml"),
-                GeneralSettings.DEFAULT,
-                LoaderSettings.builder().setAutoUpdate(true).build(),
-                DumperSettings.DEFAULT,
-                UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).build());
-        this.messagesConfiguration = YamlDocument.create(new File(getDataFolder(), "messages.yml"), getResource("messages.yml"));
+    private void prepareConfiguration() {
+        this.messageConfiguration = ConfigManager.create(MessageConfiguration.class, (it) -> {
+            it.withConfigurer(new YamlBukkitConfigurer());
+            it.withBindFile(new File(getDataFolder(), "messages.yml"));
+            it.saveDefaults();
+            it.load(true);
+        });
     }
 
 }

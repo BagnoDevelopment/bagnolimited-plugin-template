@@ -1,0 +1,8 @@
+main: pl.bagnolimited.template.TemplatePlugin
+name: PluginTemplate
+
+version: 1.0.0-SNAPSHOT
+description: Template plugin description.
+
+author: BagnoDevelopment
+website: github.bagnolimited.pl
