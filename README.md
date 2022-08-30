@@ -1,2 +1,2 @@
-# 🖼️ | Plugin Template [![](https://dcbadge.vercel.app/api/server/FypyUxpGXf)](https://discord.gg/FypyUxpGXf)
+# 🖼️ | Plugin Template
 Gotowy szablon pluginu na platformę Spigot.
