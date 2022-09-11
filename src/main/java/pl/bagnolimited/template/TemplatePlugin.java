@@ -14,10 +14,9 @@ import static pl.bagnolimited.template.util.TextUtil.*;
 
 public final class TemplatePlugin extends JavaPlugin {
 
-    @Getter
-    private MessageConfiguration messageConfiguration;
+    private final File messageConfigurationFile = new File(this.getDataFolder(), "messages.yml");
 
-    @Getter
+    private MessageConfiguration messageConfiguration;
     private EventSystem eventSystem;
 
     /*
@@ -27,15 +26,16 @@ public final class TemplatePlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        long ENABLE_TIME = System.currentTimeMillis();
+        final long ENABLE_TIME = System.currentTimeMillis();
+
         this.prepareConfiguration();
         this.eventSystem = new EventSystem(this);
 
         this.eventSystem.register(PlayerJoinEvent.class, event ->
-                event.getPlayer().sendMessage(colorString(messageConfiguration.example)));
+                event.getPlayer().sendMessage(colorString(this.messageConfiguration.example)));
 
         final long milliseconds = Math.abs(ENABLE_TIME - System.currentTimeMillis());
-        getLogger().info("Plugin enabled in " + milliseconds + "ms.");
+        this.getLogger().info("Plugin enabled in " + milliseconds + "ms.");
     }
 
     /*
@@ -48,7 +48,7 @@ public final class TemplatePlugin extends JavaPlugin {
     private void prepareConfiguration() {
         this.messageConfiguration = ConfigManager.create(MessageConfiguration.class, (it) -> {
             it.withConfigurer(new YamlBukkitConfigurer());
-            it.withBindFile(new File(getDataFolder(), "messages.yml"));
+            it.withBindFile(this.messageConfigurationFile);
             it.saveDefaults();
             it.load(true);
         });

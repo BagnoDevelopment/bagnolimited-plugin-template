@@ -14,24 +14,23 @@ public final class EventSystem {
     private final JavaPlugin plugin;
 
     public <T extends Event> void register(Class<T> type, Consumer<T> consumer, EventPriority priority, boolean ignoreCancelled) {
-        plugin.getServer().getPluginManager()
+        this.plugin.getServer().getPluginManager()
                 .registerEvent(
                         type,
-                        new Listener() {
-                        },
+                        new Listener() {},
                         priority,
                         (listener, event) -> consumer.accept((T) event),
-                        plugin,
+                        this.plugin,
                         ignoreCancelled
                 );
     }
 
     public <T extends Event> void register(Class<T> type, Consumer<T> consumer, EventPriority priority) {
-        register(type, consumer, priority, false);
+        this.register(type, consumer, priority, false);
     }
 
     public <T extends Event> void register(Class<T> type, Consumer<T> consumer) {
-        register(type, consumer, EventPriority.NORMAL);
+        this.register(type, consumer, EventPriority.NORMAL);
     }
 
 }
