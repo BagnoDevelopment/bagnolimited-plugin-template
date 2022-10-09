@@ -1,57 +1,52 @@
 package pl.bagnolimited.template;
 
-import eu.okaeri.configs.ConfigManager;
-import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
-import lombok.Getter;
-import org.bukkit.event.player.PlayerJoinEvent;
+import eu.okaeri.injector.Injector;
+import eu.okaeri.injector.OkaeriInjector;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.bagnolimited.template.base.EventSystem;
-import pl.bagnolimited.template.config.MessageConfiguration;
+import pl.bagnolimited.template.config.ConfigurationFactory;
+import pl.bagnolimited.template.config.MessagesConfiguration;
+import pl.bagnolimited.template.listener.PlayerJoinListener;
 
 import java.io.File;
 
-import static pl.bagnolimited.template.util.TextUtil.*;
-
 public final class TemplatePlugin extends JavaPlugin {
 
-    private final File messageConfigurationFile = new File(this.getDataFolder(), "messages.yml");
+    private final File MESSAGES_FILE = new File(this.getDataFolder(), "messages.yml");
 
-    private MessageConfiguration messageConfiguration;
-    private EventSystem eventSystem;
-
-    /*
-     * Plugin startup logic.
-     * Connect to database, load user data etc.
-     * Remember to load configuration files before connecting to database!
-     */
-    @Override
+    @Override /* Plugin startup logic */
     public void onEnable() {
         final long ENABLE_TIME = System.currentTimeMillis();
 
-        this.prepareConfiguration();
-        this.eventSystem = new EventSystem(this);
+        final Injector injector = OkaeriInjector.create();
 
-        this.eventSystem.register(PlayerJoinEvent.class, event ->
-                event.getPlayer().sendMessage(colorString(this.messageConfiguration.example)));
+        final ConfigurationFactory configurationFactory = new ConfigurationFactory();
+
+        final BukkitAudiences bukkitAudiences = BukkitAudiences.create(this);
+        injector.registerInjectable(bukkitAudiences);
+
+        final MiniMessage miniMessage = MiniMessage.miniMessage();
+        injector.registerInjectable(miniMessage);
+
+        final MessagesConfiguration messagesConfiguration = configurationFactory
+                .createDefault(MessagesConfiguration.class, this.MESSAGES_FILE);
+        injector.registerInjectable(messagesConfiguration);
+
+        /* Register listeners */
+        this.getServer().getPluginManager().registerEvents(injector.createInstance(PlayerJoinListener.class), this);
 
         final long milliseconds = Math.abs(ENABLE_TIME - System.currentTimeMillis());
-        this.getLogger().info("Plugin enabled in " + milliseconds + "ms.");
+        this.getLogger().info(" _                            _  _         _  _            _ ");
+        this.getLogger().info("| |__  __ _  __ _  _ _   ___ | |(_) _ __  (_)| |_  ___  __| |");
+        this.getLogger().info("| '_ \\/ _` |/ _` || ' \\ / _ \\| || || '  \\ | ||  _|/ -_)/ _` |");
+        this.getLogger().info("|_.__/\\__,_|\\__, ||_||_|\\___/|_||_||_|_|_||_| \\__|\\___|\\__,_|");
+        this.getLogger().info("            |___/                                            ");
+
+        this.getLogger().info(String.format("Plugin enabled in %d ms.", milliseconds));
     }
 
-    /*
-     * Plugin shutdown logic.
-     * Save user data, disconnect from database etc.
-     */
-    @Override
+    @Override /* Plugin shutdown logic */
     public void onDisable() {}
-
-    private void prepareConfiguration() {
-        this.messageConfiguration = ConfigManager.create(MessageConfiguration.class, (it) -> {
-            it.withConfigurer(new YamlBukkitConfigurer());
-            it.withBindFile(this.messageConfigurationFile);
-            it.saveDefaults();
-            it.load(true);
-        });
-    }
 
 }

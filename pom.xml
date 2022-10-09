@@ -10,6 +10,12 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <repositories>
+        <!-- Spigot repository -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <!-- Okaeri repository -->
         <repository>
             <id>okaeri-repo</id>
             <url>https://storehouse.okaeri.eu/repository/maven-public/</url>
@@ -17,22 +23,50 @@
     </repositories>
 
     <dependencies>
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Spigot api -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>${spigot.api.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- Okaeri -->
+        <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-injector</artifactId>
+            <version>${okaeri.injector.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.okaeri</groupId>
             <artifactId>okaeri-configs-yaml-bukkit</artifactId>
-            <version>4.0.6</version>
+            <version>${okaeri.configs.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-configs-serdes-bukkit</artifactId>
+            <version>${okaeri.configs.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Kyori Adventure -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-platform-bukkit</artifactId>
+            <version>${kyori.adventure.platform.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>${kyori.adventure.minimessage.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -42,38 +76,50 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <release>8</release>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>dev.dejvokep.boostedyaml</pattern>
-                            <shadedPattern>pl.bagnolimited.template.base.yaml</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>8</java.version>
+
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <lombok.version>1.18.24</lombok.version>
+        <spigot.api.version>1.8.8-R0.1-SNAPSHOT</spigot.api.version>
+        <okaeri.injector.version>2.1.0</okaeri.injector.version>
+        <okaeri.configs.version>4.0.6</okaeri.configs.version>
+        <kyori.adventure.platform.version>4.1.2</kyori.adventure.platform.version>
+        <kyori.adventure.minimessage.version>4.11.0</kyori.adventure.minimessage.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
